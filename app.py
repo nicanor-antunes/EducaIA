@@ -405,6 +405,31 @@ div.stButton > button[key="card_cursos"][data-testid="stBaseButton-primary"] {{
     transform: translateY(-2px) !important;
 }}
 
+/* ── CORRIGIR BOTÕES PRIMARY GENÉRICOS (evitar vermelho do tema padrão) ── */
+div.stButton > button[data-testid="stBaseButton-primary"] {{
+    background-color: #1e3a8a !important;
+    color: #ffffff !important;
+    border: none !important;
+}}
+
+/* Botão de login — verde */
+div.stButton > button[key="btn_login"] {{
+    background-color: #10b981 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: calc({_fonte_base} * 1.1) !important;
+    padding: 14px 24px !important;
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3) !important;
+    transition: all 0.2s ease-in-out !important;
+}}
+
+div.stButton > button[key="btn_login"]:hover {{
+    background-color: #059669 !important;
+    transform: translateY(-2px) !important;
+}}
+
 /* --- BOTÃO VERDE DE ENTRAR --- */
 div.stButton > button[key="entrar_sala"] {{
     background-color: #10b981 !important;
@@ -612,6 +637,22 @@ if not st.session_state.nome_aluno:
         st.markdown('<div style="font-size:3rem;font-weight:800;text-align:center;color:#1e3a8a;">🎓 EducaIA</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="hero-helper">Um ambiente de aprendizagem simples, acolhedor e fácil de usar para acompanhar o progresso do estudante.</div>', unsafe_allow_html=True)
+
+    # Controle de fonte disponível em todas as telas
+    _f = st.session_state.tamanho_fonte
+    _, col_fonte, _ = st.columns([2, 1, 2])
+    with col_fonte:
+        fa, fb, fc = st.columns(3)
+        with fa:
+            if st.button("A", key="fonte_normal", use_container_width=True, type="primary" if _f == "normal" else "secondary", help="Fonte normal"):
+                st.session_state.tamanho_fonte = "normal"; st.rerun()
+        with fb:
+            if st.button("A+", key="fonte_grande", use_container_width=True, type="primary" if _f == "grande" else "secondary", help="Fonte grande"):
+                st.session_state.tamanho_fonte = "grande"; st.rerun()
+        with fc:
+            if st.button("A++", key="fonte_extra", use_container_width=True, type="primary" if _f == "extra" else "secondary", help="Fonte extra grande"):
+                st.session_state.tamanho_fonte = "extra"; st.rerun()
+
     _, col_id, _ = st.columns([1, 1.8, 1])
     with col_id:
         with st.container(border=True):
@@ -621,7 +662,7 @@ if not st.session_state.nome_aluno:
             st.markdown("<br>", unsafe_allow_html=True)
             nome_input = st.text_input("Seu nome:", placeholder="Ex: Maria Silva", label_visibility="collapsed")
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("✅ Entrar na plataforma", type="primary", use_container_width=True):
+            if st.button("✅ Entrar na plataforma", key="btn_login", type="primary", use_container_width=True):
                 nome_limpo = nome_input.strip()
                 if not nome_limpo:
                     st.error("Por favor, digite seu nome antes de continuar.")
