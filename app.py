@@ -136,6 +136,9 @@ if "disciplina" not in st.session_state:
 if "ver_cursos" not in st.session_state:
     st.session_state.ver_cursos = False
 
+if "tamanho_fonte" not in st.session_state:
+    st.session_state.tamanho_fonte = "normal"  # "normal", "grande", "extra"
+
 if "nome_aluno" not in st.session_state:
     st.session_state.nome_aluno = ""          # identificação do aluno
 
@@ -191,206 +194,240 @@ def _carregar_do_banco():
 
 
 # ---------------- IDENTIDADE VISUAL PROFISSIONAL (CSS) ----------------
-st.markdown("""
+_escala = {"normal": "1rem", "grande": "1.22rem", "extra": "1.48rem"}
+_fonte_base = _escala.get(st.session_state.tamanho_fonte, "1rem")
+
+st.markdown(f"""
 <style>
 /* Ocultar sidebar completamente */
-[data-testid="stSidebar"] { display: none !important; }
-[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebar"] {{ display: none !important; }}
+[data-testid="collapsedControl"] {{ display: none !important; }}
+
+/* ── TAMANHO DE FONTE GLOBAL ── */
+.stApp, .stApp * {{
+    font-size: {_fonte_base} !important;
+}}
+/* Preservar tamanhos relativos em títulos */
+h1 {{ font-size: calc({_fonte_base} * 1.9) !important; }}
+h2 {{ font-size: calc({_fonte_base} * 1.55) !important; }}
+h3 {{ font-size: calc({_fonte_base} * 1.3) !important; }}
+h4 {{ font-size: calc({_fonte_base} * 1.12) !important; }}
 
 /* Estilização Geral do Fundo */
-.stApp {
+.stApp {{
     background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
+}}
 
 /* Centralização Absoluta do Logotipo */
-.centralizar-logo {
+.centralizar-logo {{
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 20px auto;
-}
+}}
 
 /* Subtítulos e Textos de Apoio */
-.subtitulo-plataforma {
+.subtitulo-plataforma {{
     color: #475569;
-    font-size: 1.3rem;
+    font-size: calc({_fonte_base} * 1.25) !important;
     font-weight: 500;
     text-align: center;
     margin-bottom: 2.5rem;
-}
+}}
 
-.titulo-seletor {
+.titulo-seletor {{
     color: #1e3a8a;
-    font-size: 1.5rem;
+    font-size: calc({_fonte_base} * 1.45) !important;
     font-weight: 700;
     text-align: center;
     margin-bottom: 1.5rem;
-}
+}}
 
-.subtitulo-seletor {
+.subtitulo-seletor {{
     color: #334155;
-    font-size: 1.1rem;
+    font-size: calc({_fonte_base} * 1.05) !important;
     font-weight: 600;
     margin-top: 1rem;
     margin-bottom: 0.8rem;
-}
+}}
 
-.hero-shell {
+.hero-shell {{
     max-width: 1040px;
     margin: 0.75rem auto 1.25rem auto;
     padding: 0 1rem;
-}
+}}
 
-.hero-stage {
+.hero-stage {{
     background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
     border: 1px solid rgba(148, 163, 184, 0.18);
     border-radius: 28px;
     padding: 1.1rem 1.25rem 1.25rem 1.25rem;
     box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-}
+}}
 
-.logo-card {
+.logo-card {{
     max-width: 270px;
     margin: 0 auto 0.85rem auto;
     padding: 0.15rem;
-}
+}}
 
-.welcome-panel {
+.welcome-panel {{
     max-width: 760px;
     margin: 0 auto;
     background: rgba(255,255,255,0.86);
     border-radius: 24px;
     border: 1px solid rgba(148, 163, 184, 0.22);
     padding: 1.25rem 1.4rem;
-}
+}}
 
-.welcome-panel .subtitulo-plataforma {
+.welcome-panel .subtitulo-plataforma {{
     margin-bottom: 0.55rem;
-}
+}}
 
-.hero-helper {
+.hero-helper {{
     max-width: 680px;
     margin: 0 auto 0.6rem auto;
     color: #475569;
-    font-size: 0.92rem;
+    font-size: calc({_fonte_base} * 0.92) !important;
     line-height: 1.35;
     text-align: center;
-}
+}}
 
-[data-testid="stTextInput"] > div > div {
+/* ── INPUTS: fundo branco, borda visível, texto escuro ── */
+[data-testid="stTextInput"] > div > div {{
     border-radius: 14px !important;
-}
+    background-color: #ffffff !important;
+    border: 2px solid #94a3b8 !important;
+}}
+[data-testid="stTextInput"] input {{
+    color: #0f172a !important;
+    font-size: {_fonte_base} !important;
+    background-color: #ffffff !important;
+}}
+[data-testid="stTextInput"] input::placeholder {{
+    color: #94a3b8 !important;
+    opacity: 1 !important;
+}}
+[data-testid="stTextInput"] > div > div:focus-within {{
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15) !important;
+}}
 
-@media (max-width: 900px) {
-    .hero-shell {
-        padding: 0 0.35rem;
-    }
+/* Selectbox e number_input também */
+[data-testid="stSelectbox"] > div > div,
+[data-testid="stNumberInput"] > div > div {{
+    background-color: #ffffff !important;
+    border: 2px solid #94a3b8 !important;
+    border-radius: 12px !important;
+    color: #0f172a !important;
+}}
 
-    .hero-stage,
-    .welcome-panel,
-    .logo-card {
-        padding: 0.9rem;
-        border-radius: 20px;
-    }
+/* Textarea (chat) */
+[data-testid="stChatInput"] textarea,
+textarea {{
+    background-color: #ffffff !important;
+    border: 2px solid #94a3b8 !important;
+    color: #0f172a !important;
+    font-size: {_fonte_base} !important;
+}}
 
-    .welcome-panel .subtitulo-plataforma,
-    .titulo-seletor,
-    .subtitulo-seletor,
-    .hero-helper {
-        text-align: center;
-    }
-}
+/* Labels dos inputs */
+label, [data-testid="stWidgetLabel"] {{
+    color: #1e293b !important;
+    font-weight: 600 !important;
+    font-size: {_fonte_base} !important;
+}}
 
 /* --- ESTILIZAÇÃO DOS BOTÕES E CARDS --- */
-div.stButton > button[key^="card_"] {
+div.stButton > button[key^="card_"] {{
     font-weight: 700 !important;
     border-radius: 16px !important;
     padding: 25px 15px !important;
     width: 100% !important;
     min-height: 135px !important;
-    font-size: 1.15rem !important;
+    font-size: calc({_fonte_base} * 1.1) !important;
     display: block !important;
     white-space: pre-line !important;
     transition: all 0.25s ease-in-out !important;
-}
+}}
 
-div.stButton > button[key^="card_"][data-testid="stBaseButton-secondary"] {
+div.stButton > button[key^="card_"][data-testid="stBaseButton-secondary"] {{
     background-color: #ffffff !important;
     color: #1e3a8a !important;
     border: 2px solid #cbd5e1 !important;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-}
+}}
 
-div.stButton > button[key^="card_"][data-testid="stBaseButton-secondary"]:hover {
+div.stButton > button[key^="card_"][data-testid="stBaseButton-secondary"]:hover {{
     border-color: #10b981 !important;
     color: #10b981 !important;
     transform: translateY(-4px) !important;
     box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.15) !important;
-}
+}}
 
-div.stButton > button[key^="card_"][data-testid="stBaseButton-primary"] {
+div.stButton > button[key^="card_"][data-testid="stBaseButton-primary"] {{
     background-color: #1e3a8a !important;
     color: #ffffff !important;
     border: 2px solid #1e3a8a !important;
     box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.25) !important;
     transform: translateY(-2px) !important;
-}
+}}
 
 /* --- BOTÃO CURSOS GRATUITOS --- */
-div.stButton > button[key="card_cursos"] {
+div.stButton > button[key="card_cursos"] {{
     font-weight: 700 !important;
     border-radius: 14px !important;
-    font-size: 1rem !important;
+    font-size: {_fonte_base} !important;
     transition: all 0.25s ease-in-out !important;
     min-height: 56px !important;
-}
+}}
 
-div.stButton > button[key="card_cursos"][data-testid="stBaseButton-secondary"] {
+div.stButton > button[key="card_cursos"][data-testid="stBaseButton-secondary"] {{
     background: linear-gradient(135deg, #fffbeb, #fef9c3) !important;
     color: #78350f !important;
     border: 2px solid #fcd34d !important;
     box-shadow: 0 4px 10px rgba(251,191,36,0.15) !important;
-}
+}}
 
-div.stButton > button[key="card_cursos"][data-testid="stBaseButton-secondary"]:hover {
+div.stButton > button[key="card_cursos"][data-testid="stBaseButton-secondary"]:hover {{
     border-color: #f59e0b !important;
     color: #92400e !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 20px rgba(245,158,11,0.25) !important;
-}
+}}
 
-div.stButton > button[key="card_cursos"][data-testid="stBaseButton-primary"] {
+div.stButton > button[key="card_cursos"][data-testid="stBaseButton-primary"] {{
     background: linear-gradient(135deg, #f59e0b, #d97706) !important;
     color: #ffffff !important;
     border: 2px solid #d97706 !important;
     box-shadow: 0 6px 16px rgba(217,119,6,0.35) !important;
     transform: translateY(-2px) !important;
-}
+}}
 
 /* --- BOTÃO VERDE DE ENTRAR --- */
-div.stButton > button[key="entrar_sala"] {
+div.stButton > button[key="entrar_sala"] {{
     background-color: #10b981 !important;
     color: #ffffff !important;
     font-weight: 700 !important;
-    font-size: 1.2rem !important;
+    font-size: calc({_fonte_base} * 1.15) !important;
     padding: 14px 24px !important;
     border-radius: 12px !important;
     border: none !important;
     min-height: auto !important;
     box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3) !important;
     transition: all 0.2s ease-in-out !important;
-}
+}}
 
-div.stButton > button[key="entrar_sala"]:hover {
+div.stButton > button[key="entrar_sala"]:hover {{
     background-color: #059669 !important;
     color: #ffffff !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4) !important;
-}
+}}
 
 /* --- BANNER HORIZONTAL DO TOPO --- */
-.banner-topo {
+.banner-topo {{
     background: linear-gradient(135deg, #1e3a8a, #2563eb);
     color: white;
     padding: 18px 32px;
@@ -402,58 +439,57 @@ div.stButton > button[key="entrar_sala"]:hover {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
-}
+}}
 
-.banner-logo-area {
+.banner-logo-area {{
     display: flex;
     align-items: center;
     gap: 14px;
-}
+}}
 
-.banner-logo-texto {
-    font-size: 1.7rem;
+.banner-logo-texto {{
+    font-size: calc({_fonte_base} * 1.6) !important;
     font-weight: 800;
     letter-spacing: -0.5px;
-}
+}}
 
-.banner-subtitulo {
-    font-size: 0.85rem;
+.banner-subtitulo {{
+    font-size: calc({_fonte_base} * 0.82) !important;
     opacity: 0.8;
     margin-top: 2px;
-}
+}}
 
-.banner-info {
+.banner-info {{
     display: flex;
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
-}
+}}
 
-.banner-badge {
+.banner-badge {{
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.25);
     border-radius: 10px;
     padding: 6px 16px;
-    font-size: 0.95rem;
+    font-size: calc({_fonte_base} * 0.92) !important;
     font-weight: 600;
     white-space: nowrap;
-}
+}}
 
-.banner-badge span {
+.banner-badge span {{
     opacity: 0.75;
     font-weight: 400;
     margin-right: 4px;
-}
+}}
 
 /* Botões de menu do banner */
-/* --- BOTÕES DE NAVEGAÇÃO (todos padronizados) --- */
 div.stButton > button[key^="menu_"],
 div.stButton > button[key="btn_alternar"],
-div.stButton > button[key="btn_sair"] {
+div.stButton > button[key="btn_sair"] {{
     height: 44px !important;
     min-height: 44px !important;
     max-height: 44px !important;
-    font-size: 0.88rem !important;
+    font-size: calc({_fonte_base} * 0.88) !important;
     font-weight: 600 !important;
     border-radius: 10px !important;
     padding: 0 12px !important;
@@ -462,58 +498,73 @@ div.stButton > button[key="btn_sair"] {
     text-overflow: ellipsis !important;
     transition: all 0.2s !important;
     width: 100% !important;
-}
+}}
 
-div.stButton > button[key^="menu_"] {
+div.stButton > button[key^="menu_"] {{
     background: white !important;
     color: #334155 !important;
     border: 1px solid #cbd5e1 !important;
-}
+}}
 
-div.stButton > button[key^="menu_"]:hover {
+div.stButton > button[key^="menu_"]:hover {{
     border-color: #2563eb !important;
     color: #1e3a8a !important;
     box-shadow: 0 2px 8px rgba(30,58,138,0.1) !important;
-}
+}}
 
-div.stButton > button[key^="menu_"][data-testid="stBaseButton-primary"] {
+div.stButton > button[key^="menu_"][data-testid="stBaseButton-primary"] {{
     background: #1e3a8a !important;
     color: white !important;
     border-color: #1e3a8a !important;
     box-shadow: 0 2px 8px rgba(30,58,138,0.25) !important;
-}
+}}
 
-div.stButton > button[key="btn_alternar"] {
+div.stButton > button[key="btn_alternar"] {{
     background: white !important;
     color: #0f766e !important;
     border: 1px solid #99f6e4 !important;
-}
+}}
 
-div.stButton > button[key="btn_alternar"]:hover {
+div.stButton > button[key="btn_alternar"]:hover {{
     background: #f0fdf4 !important;
     border-color: #10b981 !important;
-}
+}}
 
-div.stButton > button[key="btn_sair"] {
+div.stButton > button[key="btn_sair"] {{
     background: white !important;
     color: #dc2626 !important;
     border: 1px solid #fca5a5 !important;
-}
+}}
 
-div.stButton > button[key="btn_sair"]:hover {
+div.stButton > button[key="btn_sair"]:hover {{
     background: #fff1f2 !important;
     border-color: #dc2626 !important;
-}
+}}
+
+/* ── BOTÕES DE ACESSIBILIDADE ── */
+div.stButton > button[key^="fonte_"] {{
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    border: 2px solid #cbd5e1 !important;
+    background: white !important;
+    color: #334155 !important;
+    transition: all 0.2s !important;
+}}
+div.stButton > button[key^="fonte_"][data-testid="stBaseButton-primary"] {{
+    background: #1e3a8a !important;
+    color: white !important;
+    border-color: #1e3a8a !important;
+}}
 
 /* Métricas */
-.metric-row {
+.metric-row {{
     display: flex;
     gap: 16px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-}
+}}
 
-.metric-card {
+.metric-card {{
     background: white;
     border-radius: 14px;
     padding: 16px 24px;
@@ -522,28 +573,28 @@ div.stButton > button[key="btn_sair"]:hover {
     text-align: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     border: 1px solid #e2e8f0;
-}
+}}
 
-.metric-card .valor {
-    font-size: 1.8rem;
+.metric-card .valor {{
+    font-size: calc({_fonte_base} * 1.7) !important;
     font-weight: 800;
     color: #1e3a8a;
-}
+}}
 
-.metric-card .label {
-    font-size: 0.8rem;
+.metric-card .label {{
+    font-size: calc({_fonte_base} * 0.78) !important;
     color: #64748b;
     margin-top: 2px;
-}
+}}
 
-/* Rodapé Estilizado */
-.rodape-container {
+/* Rodapé */
+.rodape-container {{
     text-align: center;
     color: #64748b;
     margin-top: 50px;
-    font-size: 0.9rem;
+    font-size: calc({_fonte_base} * 0.88) !important;
     line-height: 1.6;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -871,7 +922,7 @@ else:
     """, unsafe_allow_html=True)
 
     # ---------------- LINHA DE NAVEGAÇÃO ----------------
-    nav1, nav2, nav3, nav4, nav5, nav_gap, nav_limpar, nav_trocar, nav_sair = st.columns([1.2, 1.2, 1.2, 1.2, 1.2, 0.15, 0.6, 1.2, 0.6])
+    nav1, nav2, nav3, nav4, nav5, nav_gap, nav_fonte, nav_limpar, nav_trocar, nav_sair = st.columns([1.2, 1.2, 1.2, 1.2, 1.2, 0.1, 1.1, 0.5, 1.1, 0.5])
 
     def _tipo_menu(nome):
         return "primary" if st.session_state.opcao_menu == nome else "secondary"
@@ -896,6 +947,27 @@ else:
         if st.button("🛠️ Ferramentas", key="menu_ferr", use_container_width=True, type=_tipo_menu("Ferramentas Úteis")):
             st.session_state.opcao_menu = "Ferramentas Úteis"
             st.rerun()
+    with nav_fonte:
+        _f = st.session_state.tamanho_fonte
+        f1, f2, f3 = st.columns(3)
+        with f1:
+            if st.button("A", key="fonte_normal", use_container_width=True,
+                         type="primary" if _f == "normal" else "secondary",
+                         help="Fonte normal"):
+                st.session_state.tamanho_fonte = "normal"
+                st.rerun()
+        with f2:
+            if st.button("A+", key="fonte_grande", use_container_width=True,
+                         type="primary" if _f == "grande" else "secondary",
+                         help="Fonte grande"):
+                st.session_state.tamanho_fonte = "grande"
+                st.rerun()
+        with f3:
+            if st.button("A++", key="fonte_extra", use_container_width=True,
+                         type="primary" if _f == "extra" else "secondary",
+                         help="Fonte extra grande"):
+                st.session_state.tamanho_fonte = "extra"
+                st.rerun()
     with nav_limpar:
         if st.button("🗑️", key="menu_limpar", use_container_width=True, help="Limpar conversa"):
             st.session_state.historico_chat = []
